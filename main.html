@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main page</title>
+</head>
+
+<body style="background-color: lightblue">
+<h1>WEB PAGE FOR QUERYING THE GENOME DATABASE</h1>
+<h3>Choose one of the following options:</h3>
+    <form action="listSpecies" method="get">
+      <p><b>1.</b> Obtain a list with all species available in the database:</p>
+        <input type="submit" value="Get list"><br>
+</form>
+
+<form action="listSpecies" method="get">
+<p><b> a.</b> Obtain a list with limited number of species:<br>
+    Establish a maximum of species shown: <input type="text" name="limit"></p>
+    <input type="submit" value="Get list with a limit"><br><br>
+</form>
+
+<form action="karyotype" method="get">
+<p><b>2.</b> Obtain the karyotype of a specie:</p>
+    <p>Enter the scientific name of the specie:<input type="text" name="specie"></p>
+    <input type="submit" value="Get karyotype"><br><br>
+</form>
+
+<form action="chromosomeLength" method="get">
+<p><b>3.</b> Length of a chromosome of a specie:</p>
+    <p>Enter the scientific name of the specie:<input type="text" name="specie"><br>
+    Enter the chromosome selected:<input type="text" name="chromo"></p>
+    <input type="submit" value="Get length"><br><br>
+</form>
+
+<form action="geneSeq" method="get">
+<p><b>4.</b> Sequence of a human gene:</p>
+    <p>Enter the name of the gene:<input type="text" name="gene"></p>
+    <input type="submit" value="Get sequence"><br><br>
+</form>
+
+<form action="geneInfo" method="get">
+<p><b>5.</b> Information of a sequence of a human gene (start, end, length, id and chromosome):</p>
+    <p>Enter the name of the gene:<input type="text" name="gene"></p>
+    <input type="submit" value="Get info"><br><br>
+</form>
+
+<form action="geneCal" method="get">
+<p><b>6.</b> Total length and percentage of bases of a sequence of a human gene:</p>
+    <p>Enter the name of the gene:<input type="text" name="gene"></p>
+    <input type="submit" value="Get calculations"><br><br>
+</form>
+
+<form action="geneList" method="get">
+<p><b>7.</b> Names of the genes located in the chromosome "chromo" from the start to end positions:</p>
+    <p>Enter the name of the chromosome:<input type="text" name="chromo"></p>
+    <p>Start:<input type="text" name="start"></p>
+    <p>End:<input type="text" name="end"></p>
+    <input type="submit" value="Get calculations"><br><br>
+</form>
+
+
+</body>
+</html>
