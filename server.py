@@ -454,4 +454,3 @@ with socketserver.TCPServer(("", PORT), TestHandler) as httpd:
         httpd.server_close()
         print("Stopped by the user")
 print("The server is stopped")
-
