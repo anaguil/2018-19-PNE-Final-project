@@ -258,9 +258,14 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             try:
                 resp_code = 200
                 k = self.path.find("gene=") + len("gene=")
-                gene = self.path[k:]
+                if "json=1" in self.path:
+                    l = self.path.find("&json")
+                    gene = self.path[k:l]
+                else:
+                    gene = self.path[k:]
                 id_gene = connection("/homology/symbol/human/" + gene)['data'][0]['id']
                 sequence_gene = connection("sequence/id/" + id_gene)['seq']
+                json_dict.update({'Sequence': sequence_gene})
                 html_1 = """<!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -279,15 +284,22 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             # If the gene is wrong or not found
             except KeyError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                content_type = 'text/html'
+                if json_request is True:
+                    json_dict.update({'error': 'The name of the gene {} is not found'.format(gene)})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    content_type = 'text/html'
 # --5
         elif self.path.startswith("/geneInfo"):
             try:
                 resp_code = 200
                 k = self.path.find("gene=") + len("gene=")
-                gene = self.path[k:]
+                if 'json=1' in self.path:
+                    l = self.path.find("&json")
+                    gene = self.path[k:l]
+                else:
+                    gene = self.path[k:]
                 id_gene = connection("/homology/symbol/human/" + gene)['data'][0]['id']
                 sequence_gene = connection("/sequence/id/" + id_gene)['seq']
                 info_gene = connection("/lookup/id/" + id_gene)
@@ -296,6 +308,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 start = info_gene['start']
                 sequence_gene = Seq(sequence_gene)
                 length_seq = sequence_gene.len()
+                json_dict.update({'Start': start, 'End': end, 'Length sequence': length_seq, 'Id of gene': id_gene, 'Chromosome': chromo})
                 html_1 = """<!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -318,24 +331,33 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             # If the gene is wrong or not found
             except KeyError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                content_type = 'text/html'
+                if json_request is True:
+                    json_dict.update({'error': 'The name of the gene {} is not found'.format(gene)})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    content_type = 'text/html'
 
 # --6   If the user requests calculations on the sequence of a gene
-        elif self.path.startswith("/geneCal"):
+        elif self.path.startswith("/geneCalc"):
             try:
                 resp_code = 200
                 k = self.path.find("gene=") + len("gene=")
-                gene = self.path[k:]
+                if 'json=1' in self.path:
+                    l = self.path.find("&json")
+                    gene = self.path[k:l]
+                else:
+                    gene = self.path[k:]
                 id_gene = connection("/homology/symbol/human/" + gene)['data'][0]['id']
                 sequence_gene = connection("/sequence/id/" + id_gene)['seq']
                 sequence_gene = Seq(sequence_gene)
                 length_seq = sequence_gene.len()
                 perc_print = ""
+                json_dict.update({'Length': length_seq})
                 for base in 'ACGT':
                     perc = sequence_gene.perc(base)
                     perc_print += "<br>The percentage of the base {} is: {}% <br>".format(base, perc)
+                    json_dict.update({'{}'.format(base): '{}%'.format(perc)})
                 html_1 = """<!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -345,19 +367,21 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 <body>"""
                 html_2 = "<b>Total length of the sequence of the gene {}:</b> {}".format(gene, length_seq)
                 html_3 = "<p>{}</p></body></html>".format(perc_print)
-                f = open("geneCal.html", 'w')
+                f = open("geneCalc.html", 'w')
                 f.write(html_1 + html_2 + html_3)
                 f.close()
-                f = open("geneCal.html")
+                f = open("geneCalc.html")
                 contents = f.read()
                 content_type = 'text/html'
-            # If the gene is wrong or not found
+            # If the gene is wrong or not found, doesn't work in json
             except KeyError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                content_type = 'text/html'
-
+                if json_request is True:
+                    json_dict.update({'error': 'The name of the gene {} is not found'.format(gene)})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    content_type = 'text/html'
 # --7   # If the user requests names of the genes located in the chromosome "chromo" from the start to end positions
         elif self.path.startswith("/geneList"):
             try:
@@ -366,14 +390,17 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 j = self.path.find("&end")
                 region_start = self.path[i:j]
                 k = self.path.find("end=") + len("end=")
-                region_end = self.path[k:]
+                if 'json=1' in self.path:
+                    l = self.path.find('&json')
+                    region_end = self.path[k:l]
+                else:
+                    region_end = self.path[k:]
                 region = region_start + "-" + region_end
                 n = self.path.find("chromo=") + len("chromo=")
                 m = self.path.find("&start")
                 chromo = self.path[n:m]
                 ENDPOINT = "/overlap/region/human/" + str(chromo) + ":" + str(region)
                 CONTENT_TYPE = "?content-type=application/json;feature=gene;feature=transcript;feature=cds;feature=exon"
-                # info = connection("/overlap/region/human/" + str(chromo) + ":" + str(region))
                 headers = {'User-Agent': 'http-client'}
                 conn = http.client.HTTPSConnection(HOSTNAME)
                 conn.request(METHOD, ENDPOINT + CONTENT_TYPE, None, headers)
@@ -386,14 +413,18 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 conn.close()
                 # -- Create a variable with the data from the JSON received
                 json_object = json.loads(text_json)
+                json_dict.update({'Start': region_start, 'End': region_end, 'Chromosome': chromo})
                 list_genes = "<ul>"
+                list_genes_json = []
                 for gene in json_object:
                     type_gene = gene['feature_type']
                     if type_gene == "gene":
                         gene_id = gene['id']
                         list_genes += "<li>" + gene_id + "</li>"
+                        list_genes_json.append(gene_id)
                     else:
                         pass
+                json_dict.update({'List genes': list_genes_json})
                 html_1 = """<!DOCTYPE html>
                     <html lang="en">
                     <head>
@@ -410,19 +441,24 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 f = open("geneList.html")
                 contents = f.read()
                 content_type = 'text/html'
-            # If the gene is wrong or not found
+            # If the chromosome is wrong or not found, doesn't work in json
             except KeyError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                f.close()
-                content_type = 'text/html'
+                if json_request is True:
+                    json_dict.update({'error': 'Could not process the request'})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    content_type = 'text/html'
             except TypeError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                f.close()
-                content_type = 'text/html'
+                if json_request is True:
+                    json_dict.update({'error': 'Could not process the request'})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    f.close()
+                    content_type = 'text/html'
 # If the resource requested from the client is incorrect, send an error message
         else:
             resp_code = 404
