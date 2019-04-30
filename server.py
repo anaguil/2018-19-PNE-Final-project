@@ -11,9 +11,9 @@ HOSTNAME = "rest.ensembl.org"
 METHOD = "GET"
 ENDPOINT = ""
 CONTENT_TYPE = "?content-type=application/json"
-
 PORT = 8000
 
+# -- Advanced level only done in basic level
 
 def connection(ENDPOINT):
     # -- Here we can define special headers if needed
@@ -40,6 +40,9 @@ def connection(ENDPOINT):
 class TestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
+        json_request = False
+        json_dict = {}
+        contents = ''
         print("Path:", self.path)
         # If the client requests the "/" endpoint open the main page
         if self.path == "/":
@@ -48,15 +51,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             contents = f.read()
             content_type = 'text/html'
 # --1   If the client requests the list of species
-        elif self.path == "/listSpecies":
+        elif self.path == "/listSpecies" or self.path == "/listSpecies?json=1":
             resp_code = 200
             # List of each specie a dictionary
             species = connection("/info/species")['species']
             number_species = len(species)
             list_species = "<ul>"
-            for specie in species:
+            for i, specie in enumerate(species):
                 name = specie['display_name']
                 list_species += "<li>" + name + "</li>"
+                json_dict.update({str(i+1): name})
             html_1 = """<!DOCTYPE html>
             <html lang="en">
             <head>
@@ -73,12 +77,18 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             contents = f.read()
             content_type = 'text/html'
 
+
 # --a   If the client requests the list of species with a limit
         elif self.path.startswith("/listSpecies?limit="):
             try:
                 resp_code = 200
                 i = self.path.find("limit=") + len("limit=")
-                limit = self.path[i:]
+                if 'json=1' in self.path:
+                    json_request = True
+                    j = self.path.find("&")
+                    limit = self.path[i:j]
+                else:
+                    limit = self.path[i:]
                 # -- List of species with a limit (each specie is a dictionary)
                 species = connection("/info/species")['species']
                 number_species = len(species)
@@ -90,10 +100,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 for n, specie in enumerate(species):
                     if limit == "0":
                         break
-                    if n != 0 and n == int(limit):
+                    elif n != 0 and n == int(limit):
                         break
                     name = specie['display_name']
                     list_species += "<li>" + name + "</li>"
+                    json_dict.update({str(n + 1): name})
                 html_1 = """<!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -112,21 +123,32 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             # If the limit is not correct
             except IndexError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                content_type = 'text/html'
+                if json_request is True:
+                    json_dict.update({'error': 'Cannot process your request. The limit is incorrect'})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    content_type = 'text/html'
             # If the limit is not a number
             except ValueError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                content_type = 'text/html'
+                if json_request is True:
+                    json_dict.update({'error': 'Cannot process your request. The limit must be an integer'})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    content_type = 'text/html'
 
 # --2   If the user requests the Karyotype
         elif self.path.startswith("/karyotype"):
             resp_code = 200
             i = self.path.find("specie=") + len("specie=")
-            name_specie = self.path[i:]
+            if "json=1" in self.path:
+                json_request = True
+                j = self.path.find("&")
+                name_specie = self.path[i:j]
+            else:
+                name_specie = self.path[i:]
             if "+" in name_specie:
                 name_specie = name_specie.replace("+", "_")
             try:
@@ -135,6 +157,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 list_chrom = "<ul>"
                 for n, chrom in enumerate(kary):
                     list_chrom += "<li>" + chrom + "</li>"
+                    json_dict.update({str(n): chrom})
                 html_1 = """<!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -153,17 +176,25 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             # If the name of the specie is not found
             except KeyError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                content_type = 'text/html'
+                if json_request is True:
+                    json_dict.update({'error': 'The name of the specie {} is not found'.format(name_specie)})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    content_type = 'text/html'
 
 # --3   If the user requests the chromosome length
         elif self.path.startswith("/chromosomeLength"):
             resp_code = 200
             i = self.path.find("specie=") + len("specie=")
             j = self.path.find("chromo=") + len("chromo=")
-            name_specie = self.path[i:self.path.find("&")]
-            name_chromosome = self.path[j:]
+            name_specie = self.path[i:self.path.find("&chromo")]
+            if 'json=1' in self.path:
+                json_request = True
+                k = self.path.find('&json')
+                name_chromosome = self.path[j:k]
+            else:
+                name_chromosome = self.path[j:]
             if "+" in name_specie:
                 name_specie = name_specie.replace("+", "_")
             try:
@@ -178,10 +209,14 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         loop = False
                         break
                 if loop is True:
-                    f = open("error_parameter.html", 'r')
-                    contents = f.read()
-                    content_type = 'text/html'
+                    if json_request is True:
+                        json_dict.update({'error': 'The chromosome {} is not found'.format(name_chromosome)})
+                    else:
+                        f = open("error_parameter.html", 'r')
+                        contents = f.read()
+                        content_type = 'text/html'
                 else:
+                    json_dict.update({'Chromosome': name_chromosome, 'Length': length_chromosome})
                     html_1 = """<!DOCTYPE html>
                     <html lang="en">
                     <head>
@@ -201,15 +236,21 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             # If the name of the chromosome is not found
             except UnboundLocalError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                content_type = 'text/html'
+                if json_request is True:
+                    json_dict.update({'error': 'The name of the chromosome {} is not found'.format(name_chromosome)})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    content_type = 'text/html'
             # If the specie is not found
             except KeyError:
                 resp_code = 404
-                f = open("error_parameter.html", 'r')
-                contents = f.read()
-                content_type = 'text/html'
+                if json_request is True:
+                    json_dict.update({'error': 'The name of the specie {} is not found'.format(name_specie)})
+                else:
+                    f = open("error_parameter.html", 'r')
+                    contents = f.read()
+                    content_type = 'text/html'
 # -- MEDIUM LEVEL
 # --4   If the user requests the sequence of a gene
         elif self.path.startswith("/geneSeq"):
@@ -387,6 +428,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             f = open("error.html", 'r')
             contents = f.read()
             content_type = 'text/html'
+# -- ADVANCED LEVEL
+        if 'json=1' in self.path:
+            content_type = 'application/json'
+            # Encode the information to pass it to the server, you can't pas a dict
+            contents = json.dumps(json_dict)
 
         # Sending the response to the client
         self.send_response(resp_code)
