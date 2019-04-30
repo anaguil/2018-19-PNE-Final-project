@@ -15,6 +15,7 @@ PORT = 8000
 
 # -- Advanced level only done in basic level
 
+
 def connection(ENDPOINT):
     # -- Here we can define special headers if needed
     headers = {'User-Agent': 'http-client'}
@@ -453,3 +454,4 @@ with socketserver.TCPServer(("", PORT), TestHandler) as httpd:
         httpd.server_close()
         print("Stopped by the user")
 print("The server is stopped")
+
