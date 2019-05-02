@@ -58,10 +58,12 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             species = connection("/info/species")['species']
             number_species = len(species)
             list_species = "<ul>"
-            for i, specie in enumerate(species):
+            list_species_json = []
+            for specie in species:
                 name = specie['display_name']
                 list_species += "<li>" + name + "</li>"
-                json_dict.update({str(i+1): name})
+                list_species_json.append(name)
+            json_dict.update({'Number of species': number_species, 'List of all species': list_species_json})
             html_1 = """<!DOCTYPE html>
             <html lang="en">
             <head>
@@ -98,14 +100,18 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 elif int(limit) < 0:
                     limit = "a"
                 list_species = "<ul>"
+                list_species_json = []
                 for n, specie in enumerate(species):
                     if limit == "0":
+                        list_species += "Empty"
+                        list_species_json.append("Empty")
                         break
                     elif n != 0 and n == int(limit):
                         break
                     name = specie['display_name']
                     list_species += "<li>" + name + "</li>"
-                    json_dict.update({str(n + 1): name})
+                    list_species_json.append(name)
+                json_dict.update({'Number of species': limit, 'List of species': list_species_json})
                 html_1 = """<!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -156,9 +162,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 # List with the name of the chromosomes
                 kary = connection("/info/assembly/" + name_specie)['karyotype']
                 list_chrom = "<ul>"
-                for n, chrom in enumerate(kary):
+                list_chrom_json = []
+                for chrom in kary:
                     list_chrom += "<li>" + chrom + "</li>"
-                    json_dict.update({str(n): chrom})
+                    list_chrom_json.append(chrom)
+                json_dict.update({'Species': name_specie, 'Karyotype': list_chrom_json})
                 html_1 = """<!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -257,10 +265,12 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         elif self.path.startswith("/geneSeq"):
             try:
                 resp_code = 200
+                gene = ''
                 k = self.path.find("gene=") + len("gene=")
                 if "json=1" in self.path:
-                    l = self.path.find("&json")
-                    gene = self.path[k:l]
+                    json_request = True
+                    m = self.path.find("&json")
+                    gene = self.path[k:m]
                 else:
                     gene = self.path[k:]
                 id_gene = connection("/homology/symbol/human/" + gene)['data'][0]['id']
@@ -290,14 +300,16 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     f = open("error_parameter.html", 'r')
                     contents = f.read()
                     content_type = 'text/html'
-# --5
+# --5   If the user requests information of a gene
         elif self.path.startswith("/geneInfo"):
             try:
                 resp_code = 200
+                gene = ''
                 k = self.path.find("gene=") + len("gene=")
                 if 'json=1' in self.path:
-                    l = self.path.find("&json")
-                    gene = self.path[k:l]
+                    json_request = True
+                    m = self.path.find("&json")
+                    gene = self.path[k:m]
                 else:
                     gene = self.path[k:]
                 id_gene = connection("/homology/symbol/human/" + gene)['data'][0]['id']
@@ -342,10 +354,12 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         elif self.path.startswith("/geneCalc"):
             try:
                 resp_code = 200
+                gene = ''
                 k = self.path.find("gene=") + len("gene=")
                 if 'json=1' in self.path:
-                    l = self.path.find("&json")
-                    gene = self.path[k:l]
+                    json_request = True
+                    m = self.path.find("&json")
+                    gene = self.path[k:m]
                 else:
                     gene = self.path[k:]
                 id_gene = connection("/homology/symbol/human/" + gene)['data'][0]['id']
@@ -373,7 +387,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 f = open("geneCalc.html")
                 contents = f.read()
                 content_type = 'text/html'
-            # If the gene is wrong or not found, doesn't work in json
+            # If the gene is wrong or not found
             except KeyError:
                 resp_code = 404
                 if json_request is True:
@@ -391,8 +405,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 region_start = self.path[i:j]
                 k = self.path.find("end=") + len("end=")
                 if 'json=1' in self.path:
-                    l = self.path.find('&json')
-                    region_end = self.path[k:l]
+                    json_request = True
+                    m = self.path.find('&json')
+                    region_end = self.path[k:m]
                 else:
                     region_end = self.path[k:]
                 region = region_start + "-" + region_end
@@ -426,25 +441,26 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                         pass
                 json_dict.update({'List genes': list_genes_json})
                 html_1 = """<!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>Names of the genes</title>
-                    </head>
-                    <body>"""
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Names of the genes</title>
+                </head>
+                <body>"""
                 html_2 = "<p><b>Start:</b> {}</p><p><b>End:</b> {}</p>".format(region_start, region_end)
-                html_3 = "<p><b>Chromosome:</b> {}</p></body></html>".format(chromo)
-                html_4 = "<p><b>List of genes:</b> {}</p>".format(list_genes)
+                html_3 = "<p><b>Chromosome:</b> {}</p>".format(chromo)
+                html_4 = "<p><b>List of genes:</b> {}</p></body></html>".format(list_genes)
                 f = open("geneList.html", 'w')
                 f.write(html_1 + html_2 + html_3 + html_4)
                 f.close()
                 f = open("geneList.html")
                 contents = f.read()
                 content_type = 'text/html'
-            # If the chromosome is wrong or not found, doesn't work in json
+            # If the chromosome is wrong or not found
             except KeyError:
                 resp_code = 404
                 if json_request is True:
+                    json_dict = {}
                     json_dict.update({'error': 'Could not process the request'})
                 else:
                     f = open("error_parameter.html", 'r')
@@ -453,11 +469,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             except TypeError:
                 resp_code = 404
                 if json_request is True:
+                    json_dict = {}
                     json_dict.update({'error': 'Could not process the request'})
                 else:
                     f = open("error_parameter.html", 'r')
                     contents = f.read()
-                    f.close()
                     content_type = 'text/html'
 # If the resource requested from the client is incorrect, send an error message
         else:
@@ -466,9 +482,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             contents = f.read()
             content_type = 'text/html'
 # -- ADVANCED LEVEL
-        if 'json=1' in self.path:
+        if 'json=1' in self.path and resp_code == 200:
             content_type = 'application/json'
-            # Encode the information to pass it to the server, you can't pas a dict
+            # Encode the information to pass it to the server, you can't pass a dictionary
+            contents = json.dumps(json_dict)
+        elif 'json=1' in self.path and resp_code == 404:
+            content_type = 'application/json'
+            # Encode the information to pass it to the server, you can't pass a dictionary
             contents = json.dumps(json_dict)
 
         # Sending the response to the client
