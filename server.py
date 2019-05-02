@@ -13,8 +13,6 @@ ENDPOINT = ""
 CONTENT_TYPE = "?content-type=application/json"
 PORT = 8000
 
-# -- Advanced level only done in basic level
-
 
 def connection(ENDPOINT):
     # -- Here we can define special headers if needed
@@ -54,7 +52,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 # --1   If the client requests the list of species
         elif self.path == "/listSpecies" or self.path == "/listSpecies?json=1":
             resp_code = 200
-            # List of each specie a dictionary
+            # -- List of each specie a dictionary
             species = connection("/info/species")['species']
             number_species = len(species)
             list_species = "<ul>"
@@ -159,7 +157,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             if "+" in name_specie:
                 name_specie = name_specie.replace("+", "_")
             try:
-                # List with the name of the chromosomes
+                # -- List with the name of the chromosomes
                 kary = connection("/info/assembly/" + name_specie)['karyotype']
                 list_chrom = "<ul>"
                 list_chrom_json = []
@@ -209,7 +207,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             try:
                 loop = True
                 length_chromosome = ''
-                # List with dictionaries that contain the name and length of the chromosomes
+                # -- List with dictionaries that contain the name and length of the chromosomes
                 length_chromosomes = connection("/info/assembly/" + name_specie)['top_level_region']
                 for dicti in length_chromosomes:
                     n_chromosome = dicti['name']
