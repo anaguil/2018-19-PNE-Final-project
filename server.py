@@ -77,8 +77,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             f = open("listSpecies.html")
             contents = f.read()
             content_type = 'text/html'
-
-
 # --a   If the client requests the list of species with a limit
         elif self.path.startswith("/listSpecies?limit="):
             try:
@@ -143,7 +141,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     f = open("error_parameter.html", 'r')
                     contents = f.read()
                     content_type = 'text/html'
-
 # --2   If the user requests the Karyotype
         elif self.path.startswith("/karyotype"):
             resp_code = 200
@@ -189,7 +186,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     f = open("error_parameter.html", 'r')
                     contents = f.read()
                     content_type = 'text/html'
-
 # --3   If the user requests the chromosome length
         elif self.path.startswith("/chromosomeLength"):
             resp_code = 200
@@ -347,7 +343,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     f = open("error_parameter.html", 'r')
                     contents = f.read()
                     content_type = 'text/html'
-
 # --6   If the user requests calculations on the sequence of a gene
         elif self.path.startswith("/geneCalc"):
             try:
