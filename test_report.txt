@@ -1,0 +1,654 @@
+BASIC LEVEL:
+
+1.  Endpoint: /listSpecies
+    Argument passed:
+
+    http://localhost:8000/listSpecies
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Species</title>
+        </head>
+        <body><p><b>Number of species:</b> 199</p><p><b>List of all the species:</b>
+        <ul><li>Flycatcher</li><li>American beaver</li>
+        (...)
+        <li>Human</li><li>Microbat</li></p>
+        </body></html>
+
+2.  Endpoint: /listSpecies
+    Arguments passed:
+
+    http://localhost:8000/listSpecies?limit=3
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Species</title>
+        </head>
+        <body><p><b>Number of species:</b> 3</p><p><b>List of the species:</b>
+        <ul><li>Golden Hamster</li><li>Human</li><li>Opossum</li></p></body></html>
+
+    http://localhost:8000/listSpecies?limit=20000
+        Response from the server: (Shows list of total number of species available in ensembl)
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Species</title>
+        </head>
+        <body><p><b>Number of species:</b> 199</p><p><b>List of the species:</b>
+        <ul><li>Mouse</li><li>Human</li>
+        (...)
+        <li>Mouse AKR/J</li></p>
+        </body></html>
+
+    http://localhost:8000/listSpecies?limit=0
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Species</title>
+        </head>
+        <body><p><b>Number of species:</b> 0</p> <p><b>List of the species:</b>
+        <ul>Empty</p>
+        </body></html>
+
+    http://localhost:8000/listSpecies?limit=a
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body></html>
+
+    http://localhost:8000/listSpecies?limit=-3
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+3.  Endpoint: /karyotype
+    Arguments passed:
+
+    http://localhost:8000/karyotype?specie=mouse
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Karyotype</title>
+        </head>
+        <body><p><b>List of the karyotype of the specie mouse:</b>
+        <ul><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li>
+        <li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>X</li>
+        <li>Y</li><li>MT</li></p>
+        </body></html>
+
+    http://localhost:8000/karyotype?specie=homo+sapiens
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Karyotype</title>
+        </head>
+        <body><p><b>List of the karyotype of the specie homo_sapiens:</b>
+        <ul><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li>
+        <li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li>
+        <li>21</li><li>22</li><li>X</li><li>Y</li><li>MT</li></p>
+        </body></html>
+
+    http://localhost:8000/karyotype?specie=wrong
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+    http://localhost:8000/karyotype?specie=
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+4.  Endpoint: /chromosomeLength
+    Arguments passed:
+
+    http://http://localhost:8000/chromosomeLength?specie=mouse&chromo=18
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Chromosome length</title>
+        </head>
+        <body><p><b>Length of the chromosome 18 of the specie mouse:</b> 90702639</p>
+        </body></html>
+
+    http://localhost:8000/chromosomeLength?specie=homo+sapiens&chromo=18
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Chromosome length</title>
+        </head>
+        <body><p><b>Length of the chromosome 18 of the specie homo_sapiens:</b> 80373285</p>
+        </body></html>
+
+    http://http://localhost:8000/chromosomeLength?specie=wrong&chromo=18
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+    http://http://localhost:8000/chromosomeLength?specie=&chromo=18
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+    http://http://localhost:8000/chromosomeLength?specie=mouse&chromo=wrong
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+    http://http://localhost:8000/chromosomeLength?specie=wrong&chromo=
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+5.  Endpoint: /
+    Arguments passed:
+
+    http://http://localhost:8000/
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Main page</title>
+        </head>
+
+        <body style="background-color: lightblue">
+        <h1>WEB PAGE FOR QUERYING THE GENOME DATABASE</h1>
+        <h3>Choose one of the following options:</h3>
+            <form action="listSpecies" method="get">
+              <p><b>1.</b> Obtain a list with all species available in the database:</p>
+                <input type="submit" value="Get list"><br>
+        </form>
+
+        <form action="listSpecies" method="get">
+        <p><b> a.</b> Obtain a list with limited number of species:<br>
+            Establish a maximum of species shown: <input type="text" name="limit"></p>
+            <input type="submit" value="Get list with a limit"><br><br>
+        </form>
+
+        <form action="karyotype" method="get">
+        <p><b>2.</b> Obtain the karyotype of a specie:</p>
+            <p>Enter the name of the specie:<input type="text" name="specie"></p>
+            <input type="submit" value="Get karyotype"><br><br>
+        </form>
+
+        <form action="chromosomeLength" method="get">
+        <p><b>3.</b> Length of a chromosome of a specie:</p>
+            <p>Enter the name of the specie:<input type="text" name="specie"><br>
+            Enter the chromosome selected:<input type="text" name="chromo"></p>
+            <input type="submit" value="Get length"><br><br>
+        </form>
+
+        <form action="geneSeq" method="get">
+        <p><b>4.</b> Sequence of a human gene:</p>
+            <p>Enter the name of the gene:<input type="text" name="gene"></p>
+            <input type="submit" value="Get sequence"><br><br>
+        </form>
+
+        <form action="geneInfo" method="get">
+        <p><b>5.</b> Information of a sequence of a human gene (start, end, length, id and chromosome):</p>
+            <p>Enter the name of the gene:<input type="text" name="gene"></p>
+            <input type="submit" value="Get info"><br><br>
+        </form>
+
+        <form action="geneCalc" method="get">
+        <p><b>6.</b> Total length and percentage of bases of a sequence of a human gene:</p>
+            <p>Enter the name of the gene:<input type="text" name="gene"></p>
+            <input type="submit" value="Get calculations"><br><br>
+        </form>
+
+        <form action="geneList" method="get">
+        <p><b>7.</b> Names of the genes located in the chromosome "chromo" from the start to end positions:</p>
+            <p>Enter the name of the chromosome:<input type="text" name="chromo"></p>
+            <p>Start:<input type="text" name="start"></p>
+            <p>End:<input type="text" name="end"></p>
+            <input type="submit" value="Get calculations"><br><br>
+        </form>
+
+        </body>
+        </html>
+
+MEDIUM LEVEL:
+
+1.  Endpoint: /geneSeq
+    Argument passed:
+
+    http://localhost:8000/geneSeq?gene=FRAT1
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <title>Sequence of a gene</title>
+        </head>
+        <body><p>
+        <b>Sequence of the gene FRAT1:</b> ATTCCGGCTCCCGCGGCTGCAGGCGCGCGGCTAGAGTGC(...)CCATAAACATGAAAACACTTGAAATCTC</p>
+        </body></html>
+
+    http://localhost:8000/geneSeq?gene=frat2
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <title>Sequence of a gene</title>
+        </head>
+        <body><p>
+        <b>Sequence of the gene frat2:</b> AGGCGCGTGGCTCGAGTGCCTGGCGGGCTCCGGCTTC(...)TGCTGAATAAATTTGGCTTTTGTTTTGGA</p>
+        </body></html>
+
+    http://localhost:8000/geneSeq?gene=wrong
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+    http://localhost:8000/geneSeq?gene=
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+2.  Endpoint: /geneInfo
+    Argument passed:
+
+    http://localhost:8000/geneInfo?gene=frat1
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Gene information</title>
+        </head>
+        <body><p><b>Start of the gene:</b> 97319267<br>
+        <b>End of the gene:</b> 97321915<br><b>Length of the gene:</b> 2649<br>
+        <b>Id of the gene:</b> ENSG00000165879<br>
+        <b>Chromosome that contains the gene:</b> 10
+        </body></html>
+
+    http://localhost:8000/geneInfo?gene=frat2
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Gene information</title>
+        </head>
+        <body><p><b>Start of the gene:</b> 97332497<br>
+        <b>End of the gene:</b> 97334709<br>
+        <b>Length of the gene:</b> 2213<br>
+        <b>Id of the gene:</b> ENSG00000181274<br>
+        <b>Chromosome that contains the gene:</b> 10
+        </body></html>
+
+    http://localhost:8000/geneInfo?gene=
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+    http://localhost:8000/geneInfo?gene=wrong
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+3.  Endpoint: /geneCalc
+    Argument passed:
+
+    http://localhost:8000/geneCalc?gene=FRAT1
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Calculations on sequence of a gene</title>
+        </head>
+        <body><b>Total length of the sequence of the gene frat1:</b> 2649<p><br>
+        The percentage of the base A is: 18.0% <br><br>
+        The percentage of the base C is: 30.2% <br><br>
+        The percentage of the base G is: 32.0% <br><br>
+        The percentage of the base T is: 19.7% <br></p></body></html>
+
+    http://localhost:8000/geneCalc?gene=FRAT2
+        Response form the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Calculations on sequence of a gene</title>
+        </head>
+        <body><b>Total length of the sequence of the gene frat2:</b> 2213<p><br>
+        The percentage of the base A is: 18.5% <br><br>
+        The percentage of the base C is: 28.4% <br><br>
+        The percentage of the base G is: 31.9% <br><br>
+        The percentage of the base T is: 21.3% <br></p></body></html>
+
+    http://localhost:8000/geneCalc?gene=wrong
+        Response form the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+    http://localhost:8000/geneCalc?gene=
+        Response form the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+4.  Endpoint: /geneList
+    Argument passed:
+
+    http://localhost:8000/geneList?chromo=1&start=0&end=30000
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Names of the genes</title>
+        </head>
+        <body><p><b>Start:</b> 0</p><p><b>End:</b> 30000</p><p><b>Chromosome:</b> 1</p>
+        <p><b>List of genes:</b> <ul><li>ENSG00000223972</li><li>ENSG00000227232</li><li>ENSG00000278267</li>
+        <li>ENSG00000243485</li></p>
+        </body></html>
+
+    http://localhost:8000/geneList?chromo=X&start=0&end=300000
+        Response from the server:
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Names of the genes</title>
+        </head>
+        <body><p><b>Start:</b> 0</p><p><b>End:</b> 300000</p><p><b>Chromosome:</b> X</p>
+        <p><b>List of genes:</b> <ul><li>ENSG00000228572</li><li>ENSG00000182378</li></p>
+        </body></html>
+
+    http://localhost:8000/geneList?chromo=wrong&start=0&end=30000
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+    http://localhost:8000/geneList?chromo=1&start=wrong&end=30000
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+    http://localhost:8000/geneList?chromo=1&start=0&end=wrong
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Parameter not found</p>
+        </body>
+        </html>
+
+ADVANCED LEVEL:
+
+1.  Endpoint: /listSpecies
+    Arguments passed:
+
+    http://localhost:8000/listSpecies?json=1
+        Response from the server:
+        {'Number of species': 199, 'List of all species': ['Mouse', 'Human', 'Guinea Pig', (...), 'Hyrax', 'Mouse AKR/J']}
+
+    http://localhost:8000/listSpecies?limit=10&json=1
+         Response from the server:
+         {'Number of species': '10', 'List of species': ['Flycatcher', 'American beaver', 'C.intestinalis', 'Central bearded dragon', 'Golden-collared manakin', 'Steppe mouse', 'White-throated sparrow', 'Kangaroo rat', 'Gibbon', 'Mouse FVB/NJ']}
+
+    http://localhost:8000/listSpecies?limit=0&json=1
+        Response from the server:
+        {'Number of species': '0', 'List of species': ['Empty']}
+
+    http://localhost:8000/listSpecies?limit=wrong&json=1
+        Response from the server:
+        {'error': 'Cannot process your request. The limit must be an integer'}
+
+    http://localhost:8000/listSpecies?limit=-2&json=1
+        Response from the server:
+        {'error': 'Cannot process your request. The limit must be an integer'}
+
+    http://localhost:8000/listSpecies?limit=&json=1
+        Response from the server:
+        {'error': 'Cannot process your request. The limit must be an integer'}
+
+2.  Endpoint: /karyotype
+    Arguments passed:
+
+    http://localhost:8000/karyotype?specie=mouse&json=1
+        Response from the server:
+        {'Species': 'mouse', 'Karyotype': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', 'X', 'Y', 'MT']}
+
+    http://localhost:8000/karyotype?specie=homo+sapiens&json=1
+        Response from the server:
+        {'Species': 'homo_sapiens', 'Karyotype': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y', 'MT']}
+
+    http://localhost:8000/karyotype?specie=wrong&json=1
+        Response from the server:
+        {'error': 'The name of the specie wrong is not found'}
+
+3.  Endpoint: /chromosomeLength
+    Arguments passed:
+
+    http://localhost:8000/chromosomeLength?specie=mouse&chromo=18&json=1
+        Response form the server:
+        {'Chromosome': '18', 'Length': 90702639}
+
+    http://localhost:8000/chromosomeLength?specie=homo+sapiens&chromo=18&json=1
+        Response form the server:
+        {'Chromosome': '18', 'Length': 80373285}
+
+    http://localhost:8000/chromosomeLength?specie=wrong&chromo=18&json=1
+        Response from the server:
+        {'error': 'The name of the specie wrong is not found'}
+
+    http://localhost:8000/chromosomeLength?specie=mouse&chromo=wrong&json=1
+        Response from the server:
+        {'error': 'The chromosome wrong is not found'}
+
+4.  Endpoint: /geneSeq
+    Argument passed:
+
+    http://localhost:8000/geneSeq?gene=FRAT1&json=1
+        Response from the server:
+        {'Sequence': 'ATTCCGGCTCCCGCGGCTGCAGGCGCGCGGCTAGAGTGCCTGGCGGG(...)CATTTCTCTGATCTCCATAAACATGAAAACACTTGAAATCTC'}
+
+    http://localhost:8000/geneSeq?gene=wrong&json=1
+        Response from the server:
+        {'error': 'The name of the gene wrong is not found'}
+
+5.  Endpoint: /geneInfo
+    Argument passed:
+
+    http://localhost:8000/geneInfo?gene=FRAT1&json=1
+        Response from the server:
+        {'Start': 97319267, 'End': 97321915, 'Length sequence': 2649, 'Id of gene': 'ENSG00000165879', 'Chromosome': '10'}
+
+    http://localhost:8000/geneInfo?gene=wrong&json=1
+        Response from the server:
+        {'error': 'The name of the gene wrong is not found'}
+
+6.  Endpoint: /geneCalc
+    Argument passed:
+
+    http://localhost:8000/geneCalc?gene=FRAT1&json=1
+        Response from the server:
+        {'Length': 2649, 'A': '18.0%', 'C': '30.2%', 'G': '32.0%', 'T': '19.7%'}
+
+    http://localhost:8000/geneCalc?gene=wrong&json=1
+        Response from the server:
+        {'error': 'The name of the gene wrong is not found'}
+
+7.  Endpoint: /geneList
+    Argument passed:
+
+    http://localhost:8000/geneList?chromo=1&start=0&end=30000&json=1
+        Response form the server:
+        {'Start': '0', 'End': '30000', 'Chromosome': '1', 'List genes': ['ENSG00000223972', 'ENSG00000227232', 'ENSG00000278267', 'ENSG00000243485']}
+
+    http://localhost:8000/geneList?chromo=1&start=wrong&end=30000&json=1
+        Response form the server:
+        {'error': 'Could not process the request'}
+
+    http://localhost:8000/geneList?chromo=1&start=0&end=wrong&json=1
+        Response form the server:
+        {'error': 'Could not process the request'}
+
+    http://localhost:8000/geneList?chromo=wrong&start=0&end=wrong&json=1
+        Response form the server:
+        {'error': 'Could not process the request'}
