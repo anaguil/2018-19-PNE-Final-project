@@ -443,7 +443,7 @@ MEDIUM LEVEL:
         The percentage of the base T is: 19.7% <br></p></body></html>
 
     http://localhost:8000/geneCalc?gene=FRAT2
-        Response form the server:
+        Response from the server:
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -457,7 +457,7 @@ MEDIUM LEVEL:
         The percentage of the base T is: 21.3% <br></p></body></html>
 
     http://localhost:8000/geneCalc?gene=wrong
-        Response form the server: HTML error file
+        Response from the server: HTML error file
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -471,7 +471,7 @@ MEDIUM LEVEL:
         </html>
 
     http://localhost:8000/geneCalc?gene=
-        Response form the server: HTML error file
+        Response from the server: HTML error file
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -602,11 +602,11 @@ ADVANCED LEVEL:
     Arguments passed:
 
     http://localhost:8000/chromosomeLength?specie=mouse&chromo=18&json=1
-        Response form the server:
+        Response from the server:
         {'Chromosome': '18', 'Length': 90702639}
 
     http://localhost:8000/chromosomeLength?specie=homo+sapiens&chromo=18&json=1
-        Response form the server:
+        Response from the server:
         {'Chromosome': '18', 'Length': 80373285}
 
     http://localhost:8000/chromosomeLength?specie=wrong&chromo=18&json=1
@@ -654,19 +654,19 @@ ADVANCED LEVEL:
     Arguments passed:
 
     http://localhost:8000/geneList?chromo=1&start=0&end=30000&json=1
-        Response form the server:
+        Response from the server:
         {'Start': '0', 'End': '30000', 'Chromosome': '1', 'List genes': ['ENSG00000223972', 'ENSG00000227232', 'ENSG00000278267', 'ENSG00000243485']}
 
     http://localhost:8000/geneList?chromo=1&start=wrong&end=30000&json=1
-        Response form the server:
+        Response from the server:
         {'error': 'Could not process the request'}
 
     http://localhost:8000/geneList?chromo=1&start=0&end=wrong&json=1
-        Response form the server:
+        Response from the server:
         {'error': 'Could not process the request'}
 
     http://localhost:8000/geneList?chromo=wrong&start=0&end=wrong&json=1
-        Response form the server:
+        Response from the server:
         {'error': 'Could not process the request'}
 
 8.  Endpoint: /wrong (Any other endpoint different from the previous ones)
