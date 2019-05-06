@@ -12,7 +12,8 @@ endpoints = ['/listSpecies?json=1', '/listSpecies?limit=10&json=1', '/listSpecie
              '/geneInfo?gene=FRAT1&json=1', '/geneInfo?gene=wrong&json=1',
              '/geneCalc?gene=FRAT1&json=1', '/geneCalc?gene=wrong&json=1',
              '/geneList?chromo=1&start=0&end=30000&json=1', '/geneList?chromo=1&start=wrong&end=30000&json=1',
-             '/geneList?chromo=1&start=0&end=wrong&json=1', '/geneList?chromo=wrong&start=0&end=wrong&json=1']
+             '/geneList?chromo=1&start=0&end=wrong&json=1', '/geneList?chromo=wrong&start=0&end=wrong&json=1',
+             '/wrong?json=1']
 
 for ENDPOINT in endpoints:
     r = requests.get(server + ENDPOINT, headers={"Content-Type": "application/json"})
