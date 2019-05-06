@@ -288,14 +288,30 @@ BASIC LEVEL:
             <p>End:<input type="text" name="end"></p>
             <input type="submit" value="Get calculations"><br><br>
         </form>
+        </body>
+        </html>
 
+6.  Endpoint: /wrong (Any other endpoint different from the previous ones)
+    Argument passed:
+
+    http://http://localhost:8000/wrong
+        Response from the server: HTML error file
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error</title>
+        </head>
+        <body style="background-color: red">
+        <h1>ERROR</h1>
+        <p>Resource not found</p>
         </body>
         </html>
 
 MEDIUM LEVEL:
 
 1.  Endpoint: /geneSeq
-    Argument passed:
+    Arguments passed:
 
     http://localhost:8000/geneSeq?gene=FRAT1
         Response from the server:
@@ -350,7 +366,7 @@ MEDIUM LEVEL:
         </html>
 
 2.  Endpoint: /geneInfo
-    Argument passed:
+    Arguments passed:
 
     http://localhost:8000/geneInfo?gene=frat1
         Response from the server:
@@ -410,7 +426,7 @@ MEDIUM LEVEL:
         </html>
 
 3.  Endpoint: /geneCalc
-    Argument passed:
+    Arguments passed:
 
     http://localhost:8000/geneCalc?gene=FRAT1
         Response from the server:
@@ -469,7 +485,7 @@ MEDIUM LEVEL:
         </html>
 
 4.  Endpoint: /geneList
-    Argument passed:
+    Arguments passed:
 
     http://localhost:8000/geneList?chromo=1&start=0&end=30000
         Response from the server:
@@ -602,7 +618,7 @@ ADVANCED LEVEL:
         {'error': 'The chromosome wrong is not found'}
 
 4.  Endpoint: /geneSeq
-    Argument passed:
+    Arguments passed:
 
     http://localhost:8000/geneSeq?gene=FRAT1&json=1
         Response from the server:
@@ -613,7 +629,7 @@ ADVANCED LEVEL:
         {'error': 'The name of the gene wrong is not found'}
 
 5.  Endpoint: /geneInfo
-    Argument passed:
+    Arguments passed:
 
     http://localhost:8000/geneInfo?gene=FRAT1&json=1
         Response from the server:
@@ -624,7 +640,7 @@ ADVANCED LEVEL:
         {'error': 'The name of the gene wrong is not found'}
 
 6.  Endpoint: /geneCalc
-    Argument passed:
+    Arguments passed:
 
     http://localhost:8000/geneCalc?gene=FRAT1&json=1
         Response from the server:
@@ -635,7 +651,7 @@ ADVANCED LEVEL:
         {'error': 'The name of the gene wrong is not found'}
 
 7.  Endpoint: /geneList
-    Argument passed:
+    Arguments passed:
 
     http://localhost:8000/geneList?chromo=1&start=0&end=30000&json=1
         Response form the server:
@@ -652,3 +668,10 @@ ADVANCED LEVEL:
     http://localhost:8000/geneList?chromo=wrong&start=0&end=wrong&json=1
         Response form the server:
         {'error': 'Could not process the request'}
+
+8.  Endpoint: /wrong (Any other endpoint different from the previous ones)
+    Argument passed:
+
+    http://localhost:8000/wrong?json=1
+        Response from the server:
+        {'error': 'Resource not found'}
