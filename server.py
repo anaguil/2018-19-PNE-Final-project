@@ -471,9 +471,13 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 # If the resource requested from the client is incorrect, send an error message
         else:
             resp_code = 404
-            f = open("error.html", 'r')
-            contents = f.read()
-            content_type = 'text/html'
+            if 'json=1' in self.path:
+                json_dict = {}
+                json_dict.update({'error': 'Resource not found'})
+            else:
+                f = open("error.html", 'r')
+                contents = f.read()
+                content_type = 'text/html'
 # -- ADVANCED LEVEL
         if 'json=1' in self.path and resp_code == 200:
             content_type = 'application/json'
@@ -483,8 +487,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             content_type = 'application/json'
             # Encode the information to pass it to the server, you can't pass a dictionary
             contents = json.dumps(json_dict)
-
-        # Sending the response to the client
         self.send_response(resp_code)
         self.send_header('Content-Type', content_type)
         self.send_header('Content-Length', len(str.encode(contents)))
@@ -494,7 +496,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         return
 
 
-# -- Main program
+
 with socketserver.TCPServer(("", PORT), TestHandler) as httpd:
     print("Serving at PORT: {}".format(PORT))
     try:
